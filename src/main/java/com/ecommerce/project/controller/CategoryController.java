@@ -65,6 +65,7 @@ public class CategoryController {
 		try{
 			Category status=categoryService.updateCategory(category,categoryId);
 			return ResponseEntity.ok("category with "+categoryId+" updated");
+			
 		}
 		catch (ResponseStatusException e) {
 			// TODO: handle exception
