@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ecommerce.project.exceptions.APIException;
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repositories.CategoryRepository;
 
@@ -24,13 +26,21 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<Category> getAllCategory() {
 //		return categories;
-		return categoryRepository.findAll();
+		List<Category> categories=categoryRepository.findAll();
+		if(categories.isEmpty())
+			throw new APIException("No Category Exists");
+		
+		return categories;
 	}
 
 	@Override
 	public void createCategory(Category category) {
 //		category.setCategoryId(nextId++);
 //		categories.add(category);
+		Category savedCategory=categoryRepository.findByCategoryName(category.getCategoryName());
+		if(savedCategory!=null){
+			throw new APIException("Category with category name "+category.getCategoryName()+" already exists.");
+		}
 		categoryRepository.save(category);
 		
 	}
@@ -45,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService{
 		
 //		List<Category> categories=categoryRepository.findAll();
 		
-		Category delCategory=categoryRepository.findById(categoryId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Resource not found"));
+		Category delCategory=categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category","CategoryId",categoryId));
 		categoryRepository.delete(delCategory);
 		return "Category with category Id: "+categoryId+" had been deleted";
 		
@@ -82,7 +92,7 @@ public class CategoryServiceImpl implements CategoryService{
 	return cc;
 	}
 	else {
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Category not found!!");
+		throw new ResourceNotFoundException("Category","category Id",categoryId);
 	}
 
 	}

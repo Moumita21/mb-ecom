@@ -22,6 +22,8 @@ import com.ecommerce.project.model.Category;
 import com.ecommerce.project.service.CategoryService;
 import com.ecommerce.project.service.CategoryServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
@@ -39,7 +41,7 @@ public class CategoryController {
 	
 //	@PostMapping("/api/public/addCategories")
 	@RequestMapping(value = "/public/addCategories", method = RequestMethod.POST)
-	public ResponseEntity<String> createCategory(@RequestBody Category category){
+	public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
 		categoryService.createCategory(category);
 		return ResponseEntity.ok("Category added successfully");
 	}
@@ -47,30 +49,30 @@ public class CategoryController {
 //	@DeleteMapping("/api/admin/delCategories/{categoryId}")
 	@RequestMapping(value = "/admin/delCategories/{categoryId}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
-		try{
+//		try{
 		String status=categoryService.delCategory(categoryId);
 //		return new ResponseEntity<>(status,HttpStatus.OK);
 		
 		return ResponseEntity.ok(status);
-		}
-		catch (ResponseStatusException e) {
-			// TODO: handle exception
-			return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-		}
+//		}
+//		catch (ResponseStatusException e) {
+//			// TODO: handle exception
+//			return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+//		}
 	}
 	
 //	@PutMapping("/api/admin/updateCategories/{categoryId}")
 	@RequestMapping(value = "/admin/updateCategories/{categoryId}",method = RequestMethod.PUT)
 	public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId){
-		try{
+//		try{
 			Category status=categoryService.updateCategory(category,categoryId);
 			return ResponseEntity.ok("category with category Id "+categoryId+" is updated");
 			
-		}
-		catch (ResponseStatusException e) {
-			// TODO: handle exception
-			return new ResponseEntity<>(e.getMessage(),e.getStatusCode());
-		}
+//		}
+//		catch (ResponseStatusException e) {
+//			// TODO: handle exception
+//			return new ResponseEntity<>(e.getMessage(),e.getStatusCode());
+//		}
 		
 	}
 }
